@@ -12,7 +12,6 @@ import { Button as ReactBtn } from "reactstrap";
 import { useGradientBtnStyles } from "@mui-treasury/styles/button/gradient";
 import { Spinner } from "reactstrap";
 import { useStateValue } from "./contextApi/userContext";
-import Login from "./components/Login";
 import { Switch, BrowserRouter as Router, Route, Link } from "react-router-dom";
 import AudioOnly from "./components/AudioOnly";
 import { Button } from "@material-ui/core";
@@ -27,7 +26,6 @@ const App = () => {
   const [local, setLocal] = useState();
   const [disabled, setDisabled] = useState(true);
   const styles = useRoundInputBaseStyles();
-
   const chubbyStyles = useGradientBtnStyles({ chubby: true });
 
   if (signOut) {
@@ -45,11 +43,21 @@ const App = () => {
       setLoading(true);
       const baseUrl =
         process.env.NODE_ENV === "development"
-          ? "http://localhost:5000/api/get"
-          : "/api/get";
-      const { data } = await axios.post(baseUrl, {
-        url: url,
-      });
+          ? "http://localhost:5000/v1/api/details"
+          : "/v1/api/details";
+      const { data } = await axios.post(
+        baseUrl,
+        {
+          url: url,
+        },
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+          },
+        }
+      );
+      console.log(data);
       setData(data);
       setDisabled(false);
       setLoading(false);
@@ -107,7 +115,7 @@ const App = () => {
                 )}
               </div>
               <div className="download">
-                <HomePage data={data} disabled={disabled} />
+                <HomePage data={data} disabled={disabled} url={url} />
                 {data[0]?.title && (
                   <p style={{ textAlign: "center" }}>{data[0]?.title}</p>
                 )}
@@ -152,7 +160,7 @@ const App = () => {
                 )}
               </div>
               <div className="download">
-                <AudioOnly data={data} disabled={disabled} />
+                <AudioOnly data={data} disabled={disabled} url={url} />
                 {data[0]?.title && (
                   <p style={{ textAlign: "center" }}>{data[0]?.title}</p>
                 )}

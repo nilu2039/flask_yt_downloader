@@ -1,3 +1,6 @@
+body {
+  overflow-x: hidden;
+}
 .home_img {
   height: 70vh;
   display: flex;
@@ -37,9 +40,11 @@
   border-radius: 13px;
 }
 
-.dropdown_scroll {
+.dropdown__scroll {
   overflow: scroll;
   height: 50vh;
+  width: 18vw;
+  background-image: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
 }
 
 .menu_quality {
@@ -52,4 +57,20 @@
 
 .dropdown {
   cursor: pointer;
+}
+
+.quality_list {
+  background-image: linear-gradient(to top, #c1dfc4 0%, #deecdd 100%);
+  margin: 5px;
+  padding: 5px;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #cccccc;
 }

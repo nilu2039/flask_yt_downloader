@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import "./HomePage.css";
-import { useMinimalSelectStyles } from "@mui-treasury/styles/select/minimal";
 import {
   DropdownItem,
   DropdownMenu,
@@ -8,18 +6,14 @@ import {
   Spinner,
   UncontrolledDropdown,
 } from "reactstrap";
+import "./AudioOnly.css";
 import Button from "@material-ui/core/Button";
 import { useGradientBtnStyles } from "@mui-treasury/styles/button/gradient";
-import { auth, provider } from "../firebase";
-import firebase from "firebase";
-import { useStateValue } from "../contextApi/userContext";
-import { actionTypes } from "../contextApi/reducer";
-import audioselecct from "../utils/audio_format";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
 require("dotenv").config();
-const AudioOnly = ({ data, disabled }) => {
-  const [{}, dispatch] = useStateValue();
+const AudioOnly = ({ data, disabled, url }) => {
   const [selectedOption, setSelectedOption] = useState(`Select quality`);
   const [loading, setLoading] = useState(false);
   const [id, setId] = useState();
@@ -31,36 +25,20 @@ const AudioOnly = ({ data, disabled }) => {
     setSelectedOption(quality);
     console.log(id);
   };
-  const signOut = () => {
-    firebase
-      .auth()
-      .signOut()
-      .then(() => {
-        dispatch({
-          type: actionTypes.SET_USER,
-          user: null,
-        });
-      });
-  };
+
   const download = async () => {
     if (id) {
       setLoading(true);
 
-      /*await axios.post("http://localhost:5000/test/download", data_one, {
-        onDownloadProgress: (progressEvent) => {
-          const { loaded, total } = progressEvent;
-          let percentCompleted = Math.round((loaded * 100) / total);
-          console.log(percentCompleted);
-          //setDownloadProgress(percentCompleted);
-        },
-      });
-      */
-      //await axios.get(`http://localhost:5000/test/download?code=${id}`);
-      const url =
+      const baseUrl =
         process.env.NODE_ENV === "development"
-          ? `http://localhost:5000/api/get/download?code=${id}&extension=${extension}`
-          : `/api/get/download?code=${id}&extension=${extension}`;
-      window.location.href = url;
+          ? `http://localhost:5000/v1/api/download`
+          : `/v1/api/download`;
+      const { data } = await axios.post(baseUrl, {
+        code: `${id}`,
+        url: url,
+      });
+      window.location.href = data.url;
       setLoading(false);
     } else
       return toast("Select a valid format", {
@@ -68,8 +46,6 @@ const AudioOnly = ({ data, disabled }) => {
         position: "bottom-right",
       });
   };
-
-  // moves the menu below the select input
 
   return (
     <div>
@@ -102,21 +78,20 @@ const AudioOnly = ({ data, disabled }) => {
                 aria-labelledby="navbarDropdownMenuLink2"
                 className="dropdown_scroll"
               >
-                {data?.map((val) => (
-                  <li key={val.id} className="dropdown">
-                    <DropdownItem
-                      onClick={() =>
-                        setid(
-                          val.code,
-                          val.extension,
-                          `${val.extension} ${audioselecct(val.audio)}`
-                        )
-                      }
-                    >
-                      {`${val.extension} ${audioselecct(val.audio)}`}
-                    </DropdownItem>
-                  </li>
-                ))}
+                {data?.map(
+                  (val) =>
+                    val.resolution === "audio only" && (
+                      <li key={val.id} className="dropdown">
+                        <DropdownItem
+                          onClick={() =>
+                            setid(val.code, val.extension, val.resolution)
+                          }
+                        >
+                          <div className="quality_list">{val.extension}</div>
+                        </DropdownItem>
+                      </li>
+                    )
+                )}
               </DropdownMenu>
             </div>
           )}

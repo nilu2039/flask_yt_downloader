@@ -1,5 +1,5 @@
 body {
-  background-color: #faf5f6 !important;
+  background-image: linear-gradient(to top, #a8edea 0%, #fed6e3 100%);
 }
 .app {
   display: flex;

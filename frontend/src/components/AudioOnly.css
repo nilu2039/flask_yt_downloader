@@ -1,0 +1,55 @@
+.home_img {
+  height: 70vh;
+  display: flex;
+  justify-content: center;
+  opacity: 0.8;
+  z-index: 1;
+}
+
+.menu {
+  margin-right: 15px !important;
+}
+
+@media (max-width: 990px) {
+  .home_img {
+    width: 220px;
+    height: 200px;
+  }
+  .thumbnail {
+    height: 170px !important;
+    z-index: 2;
+    border-radius: 13px;
+    margin-top: -1px !important;
+  }
+  .menu_quality {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100px;
+    justify-content: space-between;
+  }
+}
+
+.thumbnail {
+  height: 200px;
+  z-index: 2;
+  margin-top: 1px;
+  border-radius: 13px;
+}
+
+.dropdown_scroll {
+  overflow: scroll;
+  height: 22vh;
+}
+
+.menu_quality {
+  display: flex;
+}
+
+.dropdownToggle {
+  border-radius: 8px !important;
+}
+
+.dropdown {
+  cursor: pointer;
+}
