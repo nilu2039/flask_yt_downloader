@@ -21,7 +21,7 @@ con = psycopg2.connect(
     host="localhost",
     database="yt_download",
     user="postgres",
-    password="ht906200"
+    password="*********"
 )
 
 cur = con.cursor(cursor_factory=RealDictCursor)
